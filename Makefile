@@ -14,7 +14,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 # Files ----------------------------------------------------------- #
 
-C_FILES = fractol.c draw.c strings.c initialize.c calculations.c events.c
+C_FILES = fractol.c draw.c utils.c init.c calculations.c events.c parse.c
 
 O_DIR = objs
 
@@ -41,7 +41,7 @@ $(O_DIR):
 all: $(NAME)
 
 norm:
-	@norminette -R CheckForbiddenSourceHeader
+	@norminette -R CheckForbiddenSourceHeader $(C_FILES) $(HEADER)
 
 clean:
 	@rm -rf $(O_FILES) $(O_DIR)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   strings.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/15 14:20:26 by clumertz          #+#    #+#             */
-/*   Updated: 2025/07/27 13:31:41 by clumertz         ###   ########.fr       */
+/*   Created: 2025/08/02 11:42:51 by clumertz          #+#    #+#             */
+/*   Updated: 2025/08/02 16:43:05 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,26 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	}
 	return (0);
+}
+
+int	free_fractal(t_fractal *frac)
+{
+	if (frac->img)
+		mlx_destroy_image(frac->mlx, frac->img);
+	else if (frac->win)
+		mlx_destroy_window(frac->mlx, frac->win);
+	else if (frac->mlx)
+	{
+		mlx_destroy_display(frac->mlx);
+		free(frac->mlx);
+	}
+	free(frac);
+	return (0);
+}
+
+void	set_random_julia(double cx, double cy)
+{
+	cx = (((double)rand() / RAND_MAX) * 3.0 - 1.5);
+	cy = (((double)rand() / RAND_MAX) * 3.0 - 1.5);
+
 }

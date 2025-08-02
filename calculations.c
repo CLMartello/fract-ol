@@ -6,59 +6,63 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 19:56:36 by clumertz          #+#    #+#             */
-/*   Updated: 2025/07/30 21:05:00 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:28:10 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_fractol.h"
 
-void    calc_mandelbrot(t_fractal *fractal)
+void	calc_mandelbrot_julia(t_fractal *frac)
 {
-        int     i;
-        double  temp;
+	int		i;
+	double	temp;
 
-        fractal->name = "mandelbrot";
-        i = 0;
-        fractal->zx = 0.0;
-        fractal->zy = 0.0;
-        fractal->cx = (fractal->x / fractal->zoom) + fractal->offset_x;
-        fractal->cy = (fractal->y / fractal->zoom) + fractal->offset_y;
-        while (++i < fractal->max_iterations)
-        {
-                temp = fractal->zx * fractal->zx - fractal->zy * fractal->zy + fractal->cx;
-                fractal->zy = 2.0 * fractal->zx * fractal->zy + fractal->cy;
-                fractal->zx = temp;
-                if (fractal->zx * fractal->zx + fractal->zy * fractal->zy >= __DBL_MAX__)
-                        break ;
-        }
-        if (i == fractal->max_iterations)
-                color_pixel(fractal, fractal->x, fractal->y, 0x000000);
-        else
-                color_pixel(fractal, fractal->x, fractal->y, (0x99004C * i));
+	i = 0;
+	while (++i < frac->max_iterations)
+	{
+		temp = (frac->z.x * frac->z.x) - (frac->z.y * frac->z.y) + frac->c.x;
+		frac->z.y = 2.0 * frac->z.x * frac->z.y + frac->c.y;
+		frac->z.x = temp;
+//		if ((frac->z.x * frac->z.x) + (frac->z.y * frac->z.y) >= __DBL_MAX__)
+		if ((frac->z.x * frac->z.x) + (frac->z.y * frac->z.y) > 4)
+			break ;
+	}
+	if (i == frac->max_iterations)
+		color_pixel(frac, frac->x, frac->y, (0x000000));
+	else
+	{
+		frac->color = resize(new_xmax, new_xmin, i, old_xmax);
+		color_pixel(frac, frac->x, frac->y, (frac->color * i));
+	}
 }
 
-void    calc_julia(t_fractal *fractal, double cx, double cy)
+double	resize(double new_max, double new_min, double actual_nbr, double old_max)
 {
-        int     i;
-        double  temp;
+	double	value;
 
-        fractal->name = "julia";
-        fractal->cx = cx;
-        fractal->cy = cy;
-        fractal->zx = (fractal->x / fractal->zoom) + fractal->offset_x;
-        fractal->zy = (fractal->y / fractal->zoom) + fractal->offset_y;
-        i = 0;
-        while (++i < fractal->max_iterations)
-        {
-                temp = fractal->zx;
-                fractal->zx = fractal->zx * fractal->zx - fractal->zy * fractal->zy + fractal->cx;
-                fractal->zy = 2 * fractal->zy * temp * fractal->cy;
-                if (fractal->zx * fractal->zx + fractal->zy * fractal->zy >= __DBL_MAX__)
-                        break ;
-        }
-        if (i == fractal->max_iterations)
-                color_pixel(fractal, fractal->x, fractal->y, 0x000000);
-        else
-                color_pixel(fractal, fractal->x, fractal->y, (fractal->color * (i % 255)));
+	value = (new_max - new_min) * (actual_nbr) / old_max + new_min;
+	return (value);
 }
 
+void	choose_mandelbrot_julia(t_fractal *frac)
+{
+	if (frac->type == 1)
+	{
+//		frac->name = "mandelbrot";
+		frac->z.x = 0.0;
+		frac->z.y = 0.0;
+//		frac->c.x = (frac->x / frac->zoom) + frac->offset_x;
+//		frac->c.y = (frac->y / frac->zoom) + frac->offset_y;
+		frac->c.x = resize(new_xmax, new_xmin, frac->x, old_xmax);
+		frac->c.y = resize(new_xmax, new_xmin, frac->y, old_xmax);
+	}
+	else if (frac->type == 2)
+	{
+//		frac->cx = 1.1;
+//		frac->cy = 0;
+//		frac->name = "julia";
+		frac->z.x = (frac->x / frac->zoom) + frac->offset_x;
+		frac->z.y = (frac->y / frac->zoom) + frac->offset_y;
+	}
+	calc_mandelbrot_julia(frac);
+}
