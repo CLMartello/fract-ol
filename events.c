@@ -6,104 +6,92 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 18:36:08 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/02 16:01:11 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:52:41 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_fractol.h"
 
-//left click	1
-//right click	2
-//middle click	3
-//scroll up	4
-//scroll down	5
-
-void	zoom(t_fractal *frac, int x, int y, int zoom)
+int	key_event(int key_code, t_fractal *fractal)
 {
-	double	zoom_level;
-
-	zoom_level = 1.5;
-	if (zoom == 1)
-	{
-		frac->offset_x = (x / frac->zoom + frac->offset_x) - (x
-				/ (frac->zoom * zoom_level));
-		frac->offset_y = (y / frac->zoom + frac->offset_y) - (y
-				/ (frac->zoom * zoom_level));
-		frac->zoom *= zoom_level;
-	}
-	else if (zoom == -1)
-	{
-		frac->offset_x = (x / frac->zoom + frac->offset_x) - (x
-				/ (frac->zoom / zoom_level));
-		frac->offset_y = (y / frac->zoom + frac->offset_y) - (y
-				/ (frac->zoom / zoom_level));
-		frac->zoom /= zoom_level;
-	}
-	else
-		return ;
-}
-
-
-
-int	mouse_hook(int mouse_code, int x, int y, t_fractal *frac)
-{
-//	mlx_hook(frac->win, 17, 1L<<17, free_fractal, &frac);
-	if (mouse_code == 4)
-		zoom(frac, x, y, 1);
-	else if (mouse_code == 5)
-		zoom(frac, x, y, -1);
-/*	else if (mouse_code == 1 && frac->type == 2)
-	{
-		frac->cy = x;
-		frac->cy = y;
-	}*/
-	draw_fractal(frac, x, y);
+	if (key_code == ESC)
+		free_fractal(fractal);
+	if (key_code == RIGHT)
+		fractal->event.move_x += (0.5 * fractal->event.zoom);
+	if (key_code == LEFT)
+		fractal->event.move_x += (-0.5 * fractal->event.zoom);
+	if (key_code == UP)
+		fractal->event.move_y += (0.5 * fractal->event.zoom);
+	if (key_code == DOWN)
+		fractal->event.move_y += (-0.5 * fractal->event.zoom);
+	if (key_code == 99)
+		fractal->color -= 1000000;
+	if (key_code == 106)
+		julia_generator(fractal, 1);
+	draw_fractal(fractal);
 	return (0);
 }
 
-//# define KEY_UP		65362
-//# define KEY_DOWN		65364
-//# define KEY_LEFT		65361
-//# define KEY_RIGHT		65363
-
-int	key_event(int key_code, t_fractal *frac)
+void	zoom(int button, int x, int y, t_fractal *fractal)
 {
-	if (key_code == 65307)
+	double	re_math;
+	double	im_math;
+
+	re_math = (resize(2, -2, x, WIDTH) * fractal->event.zoom)
+		+ fractal->event.move_x;
+	im_math = (resize(-2, 2, y, HEIGHT) * fractal->event.zoom)
+		+ fractal->event.move_y;
+	if (button == SCROLL_UP)
+		fractal->event.zoom *= 0.9;
+	if (button == SCROLL_DOWN)
+		fractal->event.zoom *= 1.1;
+	fractal->event.move_x = re_math - resize(2, -2, x, WIDTH)
+		* fractal->event.zoom;
+	fractal->event.move_y = im_math - resize(-2, 2, y, HEIGHT)
+		* fractal->event.zoom;
+}
+
+int	mouse_event(int mouse_code, int x, int y, t_fractal *fractal)
+{
+	if ((mouse_code == SCROLL_UP && mouse_code >= 1.0e-9)
+		|| (mouse_code == SCROLL_DOWN && mouse_code <= 5))
+		zoom(mouse_code, x, y, fractal);
+	if (fractal->type == 2 && mouse_code == LEFT_CLICK)
 	{
-		free_fractal(frac);
-		exit(1);
+		fractal->c.re = (resize(2, -2, x, WIDTH)
+				+ fractal->event.zoom) + fractal->event.move_x;
+		fractal->c.im = (resize(-2, 2, y, HEIGHT)
+				+ fractal->event.zoom) + fractal->event.move_y;
 	}
-	else if (key_code == 99)
-	{
-		frac->color = (255 * 255 * 255) / 100;
-		draw_fractal(frac, 0, 0);
-/*		int i = 1;
-		while (i < 5)
-		{
-			frac->color = (255 * 255 * 255) / i;
-			draw_fractal(frac, 0, 0);
-			i++;
-		}*/
-//		draw_fractal(frac, 0, 0);
-//tentando fazer o c funcionar infinitamente
-//	        mlx_key_hook(frac->win, key_event, frac);
-//		mlx_loop(frac->mlx);	
-		mlx_loop_hook(frac->mlx, key_event, frac);
-		mlx_loop(frac->mlx);	
-	}
+	draw_fractal(fractal);
 	return (0);
 }
 
-int	mouse_hook(int button, int x, int y, t_fractal *frac);
-
-int	expose_event(t_fractal *frac);
-/*
-int	events(t_fractal)
+void	julia_generator(t_fractal *fractal, int j)
 {
-	mlx_loop(frac->mlx_ptr);
-	mlx_key_hook(frac->win_ptr, (FUNCTION_KEY), frac);
-	mlx_mouse_hook(frac->img_ptr, (FUNCTION_MOUSE), frac);
-	mlx_expose_hook(frac->img_ptr, (FUNCTION_EXPOSE), frac);
+	static int	i;
 
+	i += j;
+	if (i == 5)
+		i = 1;
+	if (i == 1)
+	{
+		fractal->c.re = -0.5125;
+		fractal->c.im = +0.5213;
+	}
+	if (i == 2)
+	{
+		fractal->c.re = -0.8;
+		fractal->c.im = +0.156;
+	}
+	if (i == 3)
+	{
+		fractal->c.re = 0.35;
+		fractal->c.im = 0.35;
+	}
+	if (i == 4)
+	{
+		fractal->c.re = +0.285;
+		fractal->c.im = 0.0;
+	}
 }
-*/

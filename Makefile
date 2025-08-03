@@ -10,11 +10,9 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -g
 
-#LFLAGS = -L.. -lmlx -L$(INCLIB) -lXext -lX11 -lm
-
 # Files ----------------------------------------------------------- #
 
-C_FILES = fractol.c draw.c utils.c init.c calculations.c events.c parse.c
+C_FILES = main.c draw.c utils.c init.c calculations.c events.c parse.c
 
 O_DIR = objs
 
@@ -36,7 +34,7 @@ $(O_DIR):
 
 # Phonies --------------------------------------------------------- #
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re norm
 
 all: $(NAME)
 

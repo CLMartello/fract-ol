@@ -6,63 +6,90 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 19:56:36 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/02 18:28:10 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:03:31 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_fractol.h"
 
-void	calc_mandelbrot_julia(t_fractal *frac)
+void	calc_mandelbrot_julia(t_fractal *fractal)
 {
 	int		i;
 	double	temp;
 
 	i = 0;
-	while (++i < frac->max_iterations)
+	while (++i < fractal->max_iterations)
 	{
-		temp = (frac->z.x * frac->z.x) - (frac->z.y * frac->z.y) + frac->c.x;
-		frac->z.y = 2.0 * frac->z.x * frac->z.y + frac->c.y;
-		frac->z.x = temp;
-//		if ((frac->z.x * frac->z.x) + (frac->z.y * frac->z.y) >= __DBL_MAX__)
-		if ((frac->z.x * frac->z.x) + (frac->z.y * frac->z.y) > 4)
+		temp = (fractal->z.re * fractal->z.re) - (fractal->z.im * fractal->z.im)
+			+ fractal->c.re;
+		fractal->z.im = 2.0 * fractal->z.re * fractal->z.im + fractal->c.im;
+		fractal->z.re = temp;
+		if ((fractal->z.re * fractal->z.re)
+			+ (fractal->z.im * fractal->z.im) > 4)
 			break ;
 	}
-	if (i == frac->max_iterations)
-		color_pixel(frac, frac->x, frac->y, (0x000000));
+	if (i == fractal->max_iterations)
+		color_pixel(fractal, fractal->x, fractal->y, (0x000000));
 	else
 	{
-		frac->color = resize(new_xmax, new_xmin, i, old_xmax);
-		color_pixel(frac, frac->x, frac->y, (frac->color * i));
+//		fractal->color = resize(0xFFFFFF, 0x000000, i, fractal->max_iterations);
+		color_pixel(fractal, fractal->x, fractal->y, (fractal->color * i));
 	}
 }
 
-double	resize(double new_max, double new_min, double actual_nbr, double old_max)
+double	resize(double new_max, double new_min, double nbr, double old_max)
 {
 	double	value;
 
-	value = (new_max - new_min) * (actual_nbr) / old_max + new_min;
+	value = (new_max - new_min) * (nbr) / old_max + new_min;
 	return (value);
 }
 
-void	choose_mandelbrot_julia(t_fractal *frac)
+void	choose_mandelbrot_julia(t_fractal *fractal)
 {
-	if (frac->type == 1)
+	if (fractal->type == 1)
 	{
-//		frac->name = "mandelbrot";
-		frac->z.x = 0.0;
-		frac->z.y = 0.0;
-//		frac->c.x = (frac->x / frac->zoom) + frac->offset_x;
-//		frac->c.y = (frac->y / frac->zoom) + frac->offset_y;
-		frac->c.x = resize(new_xmax, new_xmin, frac->x, old_xmax);
-		frac->c.y = resize(new_xmax, new_xmin, frac->y, old_xmax);
+		fractal->z.re = 0.0;
+		fractal->z.im = 0.0;
+		fractal->c.re = (resize(2, -2, fractal->x, WIDTH)
+				* fractal->event.zoom) + fractal->event.move_x;
+		fractal->c.im = (resize(-2, 2, fractal->y, HEIGHT)
+				* fractal->event.zoom) + fractal->event.move_y;
 	}
-	else if (frac->type == 2)
+	else if (fractal->type == 2)
 	{
-//		frac->cx = 1.1;
-//		frac->cy = 0;
-//		frac->name = "julia";
-		frac->z.x = (frac->x / frac->zoom) + frac->offset_x;
-		frac->z.y = (frac->y / frac->zoom) + frac->offset_y;
+		fractal->z.re = (resize(2, -2, fractal->x, WIDTH)
+				* fractal->event.zoom) + fractal->event.move_x;
+		fractal->z.im = (resize(-2, 2, fractal->y, HEIGHT)
+				* fractal->event.zoom) + fractal->event.move_y;
 	}
-	calc_mandelbrot_julia(frac);
+	calc_mandelbrot_julia(fractal);
+}
+
+void	calc_tricorn(t_fractal *fractal)
+{
+	int		i;
+	double	temp;
+
+	i = 0;
+	fractal->z.re = 0.0;
+	fractal->z.im = 0.0;
+	fractal->c.re = (resize(2, -2, fractal->x, WIDTH)
+			* fractal->event.zoom) + fractal->event.move_x;
+	fractal->c.im = (resize(-2, 2, fractal->y, HEIGHT)
+			* fractal->event.zoom) + fractal->event.move_y;
+	while (++i < fractal->max_iterations)
+	{
+		temp = fractal->z.re * fractal->z.re - fractal->z.im
+			* fractal->z.im + fractal->c.re;
+		fractal->z.im = -2.0 * fractal->z.re * fractal->z.im + fractal->c.im;
+		fractal->z.re = temp;
+		if ((fractal->z.re * fractal->z.re + fractal->z.im * fractal->z.im) > 4)
+			break ;
+	}
+	if (i == fractal->max_iterations)
+		color_pixel(fractal, fractal->x, fractal->y, (0x000000));
+	else
+//  fractal->color = resize(0xFFFFFF, 0x000000, i, fractal->max_iterations);
+		color_pixel(fractal, fractal->x, fractal->y, (fractal->color * i));
 }

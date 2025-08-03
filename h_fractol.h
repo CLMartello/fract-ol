@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:45:47 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/02 18:24:23 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:04:28 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,84 +18,99 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <stdio.h>
-//# include <math.h>
 # include "minilibx-linux/mlx.h"
 
 //Resolution definitions
-//mudar definicoes para letra maiuscula depois??
 # define WIDTH 800 
-# define HEIGHT	600
-# define old_xmax 799
-# define old_xmin 0
-# define new_xmax 2
-# define new_xmin -2
-# define old_ymax 599
-# define old_ymin 0
-# define new_ymax 2
-# define new_ymin -2
-# define iterations 100
+# define HEIGHT	800
+# define XMAX 2.0
+# define XMIN -2.0
+# define YMAX -2.0
+# define YMIN 2.0
 
-//Key and mouse definitions
+//Key definitions
+# define ESC 65307
+# define LEFT 65361
+# define UP 65362
+# define RIGHT 65363
+# define DOWN 65364
+
+//Mouse definitions
+# define LEFT_CLICK 1
+# define RIGHT_CLICK 2
+# define MIDDLE_CLICK 3
+# define SCROLL_UP 4
+# define SCROLL_DOWN 5
 
 typedef struct s_number
 {
-	double	x;
-	double	y;
-}		t_number;
+	double	re;
+	double	im;
+}			t_number;
 
-typedef struct s_data
+typedef struct s_image
 {
+	void	*img_ptr;
 	char	*addr;
 	int		bits_per_pixel;
 	int		size_line;
 	int		endian;
-}		t_data;
+}			t_image;
+
+typedef struct s_event
+{
+	double	move_x;
+	double	move_y;
+	double	zoom;
+	double	off_x;
+	double	off_y;
+}			t_event;
 
 typedef struct s_fractal
 {
-	int		type;
-	char	*name;
-	double	x;
-	double	y;
-	t_number z;
-	t_number c;
-	double	offset_x;
-	double	offset_y;
-	double	zoom;
-	int		max_iterations;
-	char	*pointer_to_img;
-	t_data	data;
-	void	*mlx;
-	void	*win;
-	void	*img;
-	int		color;
-}		t_fractal;
+	int			type;
+	char		*name;
+	double		x;
+	double		y;
+	t_number	z;
+	t_number	c;
+	int			max_iterations;
+	int			color;
+	t_image		image;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	t_event		event;
+}				t_fractal;
 
-int		draw_fractal(t_fractal *frac, double cx, double cy);
-void	mlx_fractal(t_fractal *frac);
-void	color_pixel(t_fractal *frac, int x, int y, int color);
+//Draw functions
+int		draw_fractal(t_fractal *fractal);
+void	mlx_fractal(t_fractal *fractal);
+void	color_pixel(t_fractal *fractal, int x, int y, int color);
 
 //Init functions
-void	initial_mlx(t_fractal *frac);
-void	initial_fractal(t_fractal *frac);
-int     initial_number(t_fractal *frac);
+void	initial_mlx(t_fractal *fractal);
+void	initial_fractal(t_fractal *fractal);
+void	initial_events(t_fractal *fractal);
 
 //Events functions
-int		key_event(int key_code, t_fractal *frac);
-void	zoom(t_fractal *frac, int x, int y, int zoom);
-int		mouse_hook(int mouse_code, int x, int y, t_fractal *frac);
+int		key_event(int key_code, t_fractal *fractal);
+void	zoom(int button, int x, int y, t_fractal *fractal);
+int		mouse_event(int mouse_code, int x, int y, t_fractal *fractal);
+void	julia_generator(t_fractal *fractal, int j);
 
 //Parse functions
 void	options_menu(void);
 int		menu(char *name);
 
 //Calculations functions 
-void	calc_mandelbrot_julia(t_fractal *frac);
-void	choose_mandelbrot_julia(t_fractal *frac);
-double  resize(double new_max, double new_min, double actual_nbr, double size);
+void	calc_mandelbrot_julia(t_fractal *fractal);
+void	choose_mandelbrot_julia(t_fractal *fractal);
+double	resize(double new_max, double new_min, double nbr, double size);
+void	calc_tricorn(t_fractal *fractal);
 
 //Utils functions
+void	ft_putstr(char *str);
 int		ft_strcmp(char *s1, char *s2);
-int	free_fractal(t_fractal *frac);
+int		free_fractal(t_fractal *fractal);
 
 #endif
