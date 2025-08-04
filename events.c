@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 18:36:08 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/03 19:52:41 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:02:19 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	key_event(int key_code, t_fractal *fractal)
 	if (key_code == DOWN)
 		fractal->event.move_y += (-0.5 * fractal->event.zoom);
 	if (key_code == 99)
-		fractal->color -= 1000000;
+		color_change(fractal, 1);
 	if (key_code == 106)
 		julia_generator(fractal, 1);
 	draw_fractal(fractal);
@@ -94,4 +94,31 @@ void	julia_generator(t_fractal *fractal, int j)
 		fractal->c.re = +0.285;
 		fractal->c.im = 0.0;
 	}
+}
+
+void	color_change(t_fractal *fractal, int j)
+{
+	static int	i;
+
+	i += j;
+	if (i == 9)
+		i = 0;
+	if (i == 0)
+		fractal->color = 0x66FFB2;
+	if (i == 1)
+		fractal->color = 0xFFD700;
+	if (i == 2)
+		fractal->color = 0xE4ACD7;
+	if (i == 3)
+		fractal->color = 0xFF7F50;
+	if (i == 4)
+		fractal->color = 0x66E1FF;
+	if (i == 5)
+		fractal->color = 0xFCBE11;
+	if (i == 6)
+		fractal->color = 0x00BFFF;
+	if (i == 7)
+		fractal->color = 0xE0E0E0;
+	if (i == 8)
+		fractal->color = 0x193300;
 }

@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:45:47 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/03 20:04:28 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/04 22:02:39 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ typedef struct s_fractal
 
 //Draw functions
 int		draw_fractal(t_fractal *fractal);
-void	mlx_fractal(t_fractal *fractal);
 void	color_pixel(t_fractal *fractal, int x, int y, int color);
 
 //Init functions
@@ -97,6 +96,7 @@ int		key_event(int key_code, t_fractal *fractal);
 void	zoom(int button, int x, int y, t_fractal *fractal);
 int		mouse_event(int mouse_code, int x, int y, t_fractal *fractal);
 void	julia_generator(t_fractal *fractal, int j);
+void	color_change(t_fractal *fractal, int j);
 
 //Parse functions
 void	options_menu(void);

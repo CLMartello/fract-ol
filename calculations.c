@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 19:56:36 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/03 20:03:31 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/04 21:27:59 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	calc_mandelbrot_julia(t_fractal *fractal)
 		color_pixel(fractal, fractal->x, fractal->y, (0x000000));
 	else
 	{
-//		fractal->color = resize(0xFFFFFF, 0x000000, i, fractal->max_iterations);
 		color_pixel(fractal, fractal->x, fractal->y, (fractal->color * i));
 	}
 }
@@ -90,6 +89,5 @@ void	calc_tricorn(t_fractal *fractal)
 	if (i == fractal->max_iterations)
 		color_pixel(fractal, fractal->x, fractal->y, (0x000000));
 	else
-//  fractal->color = resize(0xFFFFFF, 0x000000, i, fractal->max_iterations);
 		color_pixel(fractal, fractal->x, fractal->y, (fractal->color * i));
 }
