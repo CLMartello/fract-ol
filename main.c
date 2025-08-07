@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 13:35:55 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/03 19:53:46 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:21:09 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char *argv[])
 	fractal = malloc(sizeof(t_fractal));
 	if (!fractal)
 		return (0);
-	fractal->type = menu(argv[1]);
+	fractal->type = menu(argv[1], fractal);
 	fractal->name = argv[1];
 	initial_fractal(fractal);
 	initial_events(fractal);

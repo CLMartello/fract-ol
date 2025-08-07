@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:45:47 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/04 22:02:39 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:21:37 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@
 //Resolution definitions
 # define WIDTH 800 
 # define HEIGHT	800
-# define XMAX 2.0
-# define XMIN -2.0
-# define YMAX -2.0
-# define YMIN 2.0
 
 //Key definitions
 # define ESC 65307
@@ -100,7 +96,7 @@ void	color_change(t_fractal *fractal, int j);
 
 //Parse functions
 void	options_menu(void);
-int		menu(char *name);
+int		menu(char *name, t_fractal *fractal);
 
 //Calculations functions 
 void	calc_mandelbrot_julia(t_fractal *fractal);

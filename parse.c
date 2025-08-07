@@ -6,13 +6,13 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 09:05:33 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/03 18:40:31 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:21:39 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_fractol.h"
 
-void	events_options(void)
+static void	events_options(void)
 {
 	ft_putstr("Your event options are:.\n");
 	ft_putstr("Mouse scroll up and down to zoom in or out.\n");
@@ -33,7 +33,7 @@ void	options_menu(void)
 	exit(EXIT_FAILURE);
 }
 
-int	menu(char *name)
+int	menu(char *name, t_fractal *fractal)
 {
 	if ((ft_strcmp(name, "mandelbrot")) == 0)
 		return (1);
@@ -42,7 +42,11 @@ int	menu(char *name)
 	else if ((ft_strcmp(name, "tricorn")) == 0)
 		return (3);
 	else if ((ft_strcmp(name, "events")) == 0)
+	{
+		free(fractal);
 		events_options();
+	}
+	free(fractal);
 	options_menu();
 	return (0);
 }
