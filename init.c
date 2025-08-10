@@ -6,7 +6,7 @@
 /*   By: clumertz <clumertz@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 21:25:35 by clumertz          #+#    #+#             */
-/*   Updated: 2025/08/06 19:07:02 by clumertz         ###   ########.fr       */
+/*   Updated: 2025/08/10 11:21:12 by clumertz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	initial_fractal(t_fractal *fractal)
 	fractal->y = 0;
 	fractal->z.re = 0.0;
 	fractal->z.im = 0.0;
-	fractal->c.re = 0.0;
-	fractal->c.im = 0.0;
+	fractal->c.re = 0.4;
+	fractal->c.im = 0.4;
 	fractal->max_iterations = 100;
 	fractal->color = 0x66FFB2;
 	fractal->event.move_x = 0.0;

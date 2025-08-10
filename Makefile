@@ -4,11 +4,17 @@ NAME = fractol
 
 HEADER = h_fractol.h
 
+MLX_PATH = minilibx-linux/
+
+MLX = minilibx-linux/libmlx.a
+
 # Flags ----------------------------------------------------------- #
 
 CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -g
+
+MAKE = make
 
 # Files ----------------------------------------------------------- #
 
@@ -20,12 +26,20 @@ O_FILES = $(patsubst %.c, $(O_DIR)/%.o, $(C_FILES))
 
 # Pattern Rule ---------------------------------------------------- #
 
+all: verify_mlx $(MLX) $(NAME)
+
+$(MLX):
+	@$(MAKE) -C $(MLX_PATH)
+
 $(NAME): $(O_FILES)
 	@$(CC) $(CFLAGS) -std=gnu99 -I. $(O_FILES) -L -lmlx -lXext -lX11 minilibx-linux/libmlx_Linux.a -o $(NAME)
 	@echo "Compiled Program"
 
 $(O_DIR)/%.o: %.c $(HEADER) | $(O_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+verify_mlx:
+	@if test ! -d $(MLX); then make $(MLX); fi 
 
 # Directory Rule -------------------------------------------------- #
 
@@ -35,8 +49,6 @@ $(O_DIR):
 # Phonies --------------------------------------------------------- #
 
 .PHONY: all clean fclean re norm
-
-all: $(NAME)
 
 norm:
 	@norminette -R CheckForbiddenSourceHeader $(C_FILES) $(HEADER)
