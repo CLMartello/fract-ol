@@ -8,9 +8,21 @@ Fract-ol is a 42 project to explore and render mathematical fractals using the M
 
 ## Usage
 1. Clone the repository
+```bash
+git clone git@github.com:CLMartello/fract-ol.git
+```
 2. Command "make" to compile program.
+```bash
+make
+```
 3. Execute command "./fractol" to see fractal options.
+```bash
+./fractol
+```
 4. Execute command "./fractol events" to see event options.
+```bash
+./fractol events
+```
 
 ## Allowed events
 1. Mouse scrolls zooms in and out and follows mouse position.
