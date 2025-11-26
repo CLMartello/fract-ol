@@ -19,10 +19,14 @@ make
 ```bash
 ./fractol
 ```
+<img width="427" height="112" alt="Screenshot from 2025-11-26 14-33-34" src="https://github.com/user-attachments/assets/4608f83d-9953-4dcf-9405-dd910946baab" />
+
 4. Execute command "./fractol events" to see event options.
 ```bash
 ./fractol events
 ```
+<img width="392" height="128" alt="Screenshot from 2025-11-26 14-34-28" src="https://github.com/user-attachments/assets/c51b97e8-d163-49ba-bd1d-a356cbeb35af" />
+
 
 ## Allowed events
 1. Mouse scrolls zooms in and out and follows mouse position.
